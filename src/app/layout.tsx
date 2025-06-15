@@ -16,7 +16,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Remove Grammarly attributes on load
+              document.addEventListener('DOMContentLoaded', () => {
+                const body = document.body;
+                if (body) {
+                  body.removeAttribute('data-gr-ext-installed');
+                  body.removeAttribute('data-new-gr-c-s-check-loaded');
+                }
+              });
+            `,
+          }}
+        />
+      </head>
+      <body className={inter.className} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

@@ -9,6 +9,8 @@ import PlaybackBar from "@/components/playback-bar";
 import { TimeProvider, useTime } from "@/context/time-context";
 import Sidebar from "@/components/side-nav";
 import Loading from "@/components/loading-component";
+import { autoEvaluateEpisode } from '@/utils/autoQualityEvaluator';
+import { EpisodeQuality } from '@/utils/episodeQuality';
 
 export default function EpisodeViewer({
   data,
@@ -64,6 +66,9 @@ function EpisodeViewerInner({ data }: { data: any }) {
     currentPage * pageSize,
   );
 
+  // Estado para la evaluación automática
+  const [autoEvaluation, setAutoEvaluation] = useState<EpisodeQuality | null>(null);
+
   // Initialize based on URL time parameter
   useEffect(() => {
     const timeParam = searchParams.get("t");
@@ -82,7 +87,7 @@ function EpisodeViewerInner({ data }: { data: any }) {
     });
   }, []);
 
-  // Initialize based on URL time parameter
+  // Initialize based on URL time parameter and episode
   useEffect(() => {
     // Initialize page based on current episode
     const episodeIndex = episodes.indexOf(episodeId);
@@ -153,6 +158,59 @@ function EpisodeViewerInner({ data }: { data: any }) {
     }
   };
 
+  // Realizar evaluación automática cuando los datos estén listos
+  useEffect(() => {
+    if (chartsReady && !autoEvaluation) {
+      const evaluation = autoEvaluateEpisode(data);
+      setAutoEvaluation(evaluation);
+      
+      // Solo aplicar la evaluación automática si no hay una calificación manual
+      const checkAndApplyAutoEvaluation = async () => {
+        try {
+          const [org, dataset] = data.datasetInfo.repoId.split('/');
+          const response = await fetch(`/api/quality/${org}/${dataset}/${data.episodeId}`);
+          if (response.ok) {
+            const currentQuality = await response.json();
+            // Solo aplicar si no hay calificación o si no fue modificada por el usuario
+            if (!currentQuality || !currentQuality.modifiedByUser) {
+              if (evaluation.quality === 'good' || evaluation.quality === 'bad') {
+                handleQualityChange(evaluation.quality);
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error checking current quality:', error);
+        }
+      };
+      
+      checkAndApplyAutoEvaluation();
+    }
+  }, [chartsReady, data, autoEvaluation]);
+
+  const handleQualityChange = async (quality: 'good' | 'bad') => {
+    try {
+      const [org, dataset] = data.datasetInfo.repoId.split('/');
+      const response = await fetch(`/api/quality/${org}/${dataset}/${data.episodeId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quality,
+          timestamp: Date.now(),
+          metadata: autoEvaluation?.metadata,
+          source: 'auto' // Indicar que es una calificación automática
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save quality rating');
+      }
+    } catch (error) {
+      console.error('Error saving quality rating:', error);
+    }
+  };
+
   return (
     <div className="flex h-screen max-h-screen bg-slate-950 text-gray-200">
       {/* Sidebar */}
@@ -164,6 +222,7 @@ function EpisodeViewerInner({ data }: { data: any }) {
         currentPage={currentPage}
         prevPage={prevPage}
         nextPage={nextPage}
+        initialQuality={autoEvaluation}
       />
 
       {/* Content */}
@@ -225,6 +284,20 @@ function EpisodeViewerInner({ data }: { data: any }) {
         </div>
 
         <PlaybackBar />
+
+        {/* Mostrar el resultado de la evaluación automática */}
+        {autoEvaluation && (
+          <div className="absolute top-4 right-4 z-10">
+            <div className={`px-4 py-2 rounded-lg ${
+              autoEvaluation.quality === 'good' ? 'bg-green-600' : 'bg-red-600'
+            } text-white`}>
+              <p className="font-bold">Auto Evaluated: {autoEvaluation.quality.toUpperCase()}</p>
+              {autoEvaluation.notes && (
+                <p className="text-sm mt-1">{autoEvaluation.notes}</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

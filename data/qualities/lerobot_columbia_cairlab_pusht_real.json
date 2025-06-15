@@ -1,0 +1,75 @@
+{
+  "0": {
+    "quality": "good",
+    "timestamp": 1750022165003,
+    "source": "auto"
+  },
+  "1": {
+    "quality": "good",
+    "timestamp": 1750022173324,
+    "source": "auto"
+  },
+  "2": {
+    "quality": "bad",
+    "timestamp": 1750022185530,
+    "notes": "",
+    "modifiedByUser": true,
+    "source": "manual"
+  },
+  "3": {
+    "quality": "bad",
+    "timestamp": 1750018944882
+  },
+  "6": {
+    "quality": "good",
+    "timestamp": 1750021404324,
+    "source": "auto"
+  },
+  "83": {
+    "quality": "good",
+    "timestamp": 1750021462219,
+    "source": "auto"
+  },
+  "86": {
+    "quality": "good",
+    "timestamp": 1750021513986,
+    "source": "auto"
+  },
+  "90": {
+    "quality": "good",
+    "timestamp": 1750022046208,
+    "source": "auto"
+  },
+  "94": {
+    "quality": "good",
+    "timestamp": 1750022054275,
+    "source": "auto"
+  },
+  "96": {
+    "quality": "good",
+    "timestamp": 1750022160563,
+    "source": "auto"
+  },
+  "97": {
+    "quality": "good",
+    "timestamp": 1750021670167,
+    "source": "auto"
+  },
+  "98": {
+    "quality": "good",
+    "timestamp": 1750021565078,
+    "source": "auto"
+  },
+  "99": {
+    "quality": "good",
+    "timestamp": 1750021655025,
+    "source": "auto"
+  },
+  "metadata": {
+    "total_episodes": 13,
+    "good_episodes": 11,
+    "bad_episodes": 2,
+    "unrated_episodes": 0,
+    "last_updated": 1750022185530
+  }
+}

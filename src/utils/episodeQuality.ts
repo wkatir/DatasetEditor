@@ -5,11 +5,18 @@ export interface EpisodeQuality {
   quality: 'good' | 'bad' | 'unrated';
   notes?: string;
   timestamp: number;
+  modifiedByUser?: boolean;
+  source: 'auto' | 'manual';
   metadata?: {
     frame_count?: number;
     duration?: number;
     error_count?: number;
     success_rate?: number;
+    reward_sum?: number;
+    criteria_met?: number;
+    max_reward?: number;
+    min_reward?: number;
+    reward_variance?: number;
   };
 }
 
@@ -59,26 +66,37 @@ export function saveEpisodeQuality(
   episodeId: number,
   quality: EpisodeQuality
 ): void {
-  const filePath = getQualityFilePath(org, dataset);
-  let qualities: DatasetQuality = {};
-  
-  // Leer el archivo existente si existe
-  if (fs.existsSync(filePath)) {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    qualities = JSON.parse(fileContent);
+  try {
+    const filePath = getQualityFilePath(org, dataset);
+    let qualities: DatasetQuality = {};
+    
+    // Leer el archivo existente si existe
+    if (fs.existsSync(filePath)) {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      qualities = JSON.parse(fileContent);
+    }
+    
+    // Actualizar la calificación
+    qualities[episodeId] = {
+      ...quality,
+      timestamp: Date.now()
+    };
+    
+    // Actualizar metadatos
+    qualities = updateDatasetMetadata(qualities);
+    
+    // Asegurarse de que el directorio existe
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    
+    // Guardar el archivo
+    fs.writeFileSync(filePath, JSON.stringify(qualities, null, 2));
+  } catch (error) {
+    console.error('Error saving episode quality:', error);
+    throw new Error('Failed to save episode quality');
   }
-  
-  // Actualizar la calificación
-  qualities[episodeId] = {
-    ...quality,
-    timestamp: Date.now()
-  };
-  
-  // Actualizar metadatos
-  qualities = updateDatasetMetadata(qualities);
-  
-  // Guardar el archivo
-  fs.writeFileSync(filePath, JSON.stringify(qualities, null, 2));
 }
 
 // Función para obtener la calificación de un episodio

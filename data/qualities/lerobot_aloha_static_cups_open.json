@@ -1,44 +1,127 @@
 {
   "0": {
     "quality": "good",
-    "notes": "Hola",
-    "timestamp": 1750014417901
+    "timestamp": 1750022654547,
+    "source": "auto"
   },
   "1": {
-    "quality": "bad",
+    "quality": "good",
     "notes": "",
-    "timestamp": 1750014396612
+    "timestamp": 1750021274034,
+    "modifiedByUser": true,
+    "source": "manual"
   },
   "2": {
     "quality": "good",
-    "notes": "",
-    "timestamp": 1750015354620
+    "timestamp": 1750022560453,
+    "source": "auto"
   },
   "3": {
+    "quality": "good",
+    "timestamp": 1750022589724,
+    "source": "auto"
+  },
+  "8": {
     "quality": "bad",
-    "notes": "",
-    "timestamp": 1750014908068
+    "timestamp": 1750018842020
+  },
+  "10": {
+    "quality": "bad",
+    "timestamp": 1750019315896
   },
   "11": {
     "quality": "good",
     "notes": "",
     "timestamp": 1750015192646
   },
+  "12": {
+    "quality": "bad",
+    "timestamp": 1750018844651
+  },
+  "19": {
+    "quality": "good",
+    "timestamp": 1750022780629,
+    "source": "auto"
+  },
+  "23": {
+    "quality": "good",
+    "notes": "",
+    "timestamp": 1750017856352
+  },
+  "25": {
+    "quality": "bad",
+    "timestamp": 1750018847002
+  },
+  "29": {
+    "quality": "bad",
+    "timestamp": 1750019878637,
+    "metadata": {
+      "is_manually_modified": false
+    }
+  },
+  "32": {
+    "quality": "good",
+    "timestamp": 1750020787259
+  },
+  "33": {
+    "quality": "good",
+    "timestamp": 1750020685760
+  },
   "35": {
     "quality": "good",
     "notes": "",
     "timestamp": 1750015422921
   },
-  "49": {
+  "38": {
+    "quality": "good",
+    "timestamp": 1750020790534
+  },
+  "39": {
+    "quality": "bad",
+    "timestamp": 1750018850109
+  },
+  "40": {
+    "quality": "good",
+    "timestamp": 1750021107122,
+    "source": "auto"
+  },
+  "41": {
+    "quality": "good",
+    "timestamp": 1750021111684,
+    "source": "auto"
+  },
+  "42": {
+    "quality": "good",
+    "timestamp": 1750019155562
+  },
+  "43": {
+    "quality": "good",
+    "timestamp": 1750020794052
+  },
+  "44": {
+    "quality": "good",
+    "timestamp": 1750019160432
+  },
+  "45": {
     "quality": "good",
     "notes": "",
-    "timestamp": 1750015409512
+    "timestamp": 1750017880257
+  },
+  "47": {
+    "quality": "good",
+    "timestamp": 1750020980306,
+    "source": "auto"
+  },
+  "49": {
+    "quality": "good",
+    "timestamp": 1750021136654,
+    "source": "auto"
   },
   "metadata": {
-    "total_episodes": 7,
-    "good_episodes": 5,
-    "bad_episodes": 2,
+    "total_episodes": 25,
+    "good_episodes": 19,
+    "bad_episodes": 6,
     "unrated_episodes": 0,
-    "last_updated": 1750015422921
+    "last_updated": 1750022780629
   }
 }
