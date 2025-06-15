@@ -1,7 +1,7 @@
 {
   "0": {
     "quality": "good",
-    "timestamp": 1750022654547,
+    "timestamp": 1750023164927,
     "source": "auto"
   },
   "1": {
@@ -13,7 +13,7 @@
   },
   "2": {
     "quality": "good",
-    "timestamp": 1750022560453,
+    "timestamp": 1750023172997,
     "source": "auto"
   },
   "3": {
@@ -41,6 +41,11 @@
   "19": {
     "quality": "good",
     "timestamp": 1750022780629,
+    "source": "auto"
+  },
+  "20": {
+    "quality": "good",
+    "timestamp": 1750023130755,
     "source": "auto"
   },
   "23": {
@@ -109,7 +114,7 @@
   },
   "47": {
     "quality": "good",
-    "timestamp": 1750020980306,
+    "timestamp": 1750023183703,
     "source": "auto"
   },
   "49": {
@@ -118,10 +123,10 @@
     "source": "auto"
   },
   "metadata": {
-    "total_episodes": 25,
-    "good_episodes": 19,
+    "total_episodes": 26,
+    "good_episodes": 20,
     "bad_episodes": 6,
     "unrated_episodes": 0,
-    "last_updated": 1750022780629
+    "last_updated": 1750023183703
   }
 }

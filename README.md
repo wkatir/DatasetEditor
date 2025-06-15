@@ -1,179 +1,100 @@
-# LeRobot Dataset Visualizer
+# Dataset Editor SV
 
-A modern web application for visualizing and exploring robotics datasets. This tool helps researchers, developers, and students analyze robot training data through an intuitive and interactive interface.
+## Overview
+Dataset Editor SV is a powerful web-based tool designed to streamline and enhance the process of dataset visualization, editing, and quality assessment. This project is inspired by and built upon the template from [LeRobot's Dataset Visualizer](https://huggingface.co/spaces/lerobot/visualize_dataset), with significant improvements and additional features.
 
-## Features
+## Purpose
+The primary goal of this project is to address the challenges in dataset management and quality control, particularly in the context of embodied AI and robotics. It provides a user-friendly interface for:
 
-- 🎥 Video playback and visualization of robot training episodes
-- 📊 Interactive data visualization with Recharts
-- 🔍 Dataset exploration and navigation
-- 📱 Responsive design with modern UI
-- 🚀 Fast performance with Next.js and Turbopack
-- 🎯 TypeScript for type safety
-- 🎨 Beautiful UI with TailwindCSS
-- 🏷️ Dataset Quality Classification System
+- Visualizing and exploring datasets
+- Assessing and rating episode quality
+- Managing and organizing dataset episodes
+- Exporting high-quality episodes
+- Adding detailed notes and annotations
 
-## Dataset Quality Classification
+## Key Features
 
-The application includes a robust system for classifying and managing dataset quality:
+### 1. Enhanced Visualization
+- Multi-video synchronization
+- Support for various video codecs (including AV1)
+- Responsive design for different screen sizes
+- Background video integration
 
-### Classification Features
+### 2. Quality Assessment System
+- Episode quality rating (good/bad)
+- Detailed notes and annotations
+- Quality metrics tracking
+- Export functionality for high-quality episodes
 
-- **Quality Rating**: Mark episodes as "Good" or "Bad"
-- **Notes**: Add detailed notes to each classification
-- **Metadata Tracking**: Automatically tracks:
-  - Frame count
-  - Duration
-  - Error count
-  - Success rate
+### 3. User-Friendly Interface
+- Intuitive navigation
+- Sidebar for dataset information
+- Episode pagination
+- Real-time updates
 
-### How to Use Classification
+### 4. Data Management
+- Episode organization
+- Quality tracking
+- Export capabilities
+- Dataset exploration
 
-1. **View an Episode**:
-   - Navigate to any episode in the dataset
-   - Use the sidebar controls to play and analyze the episode
+## Technical Implementation
 
-2. **Classify the Episode**:
-   - Click "Good" or "Bad" to classify the episode
-   - Add notes using the "Add Notes" button
-   - Notes can include observations, issues, or any relevant information
+### Frontend
+- Built with Next.js and TypeScript
+- React for component management
+- Tailwind CSS for styling
+- YouTube IFrame API integration
 
-3. **Export Good Episodes**:
-   - Click "Export Good" to download a JSON file containing:
-     - List of all good episodes
-     - Episode metadata
-     - Quality information
-     - Success rates and error counts
-
-### Data Storage
-
-Classifications are stored in JSON format at:
-```
-data/qualities/${organization}_${dataset}.json
-```
-
-The JSON structure includes:
-```json
-{
-  "metadata": {
-    "total_episodes": number,
-    "good_episodes": number,
-    "bad_episodes": number,
-    "unrated_episodes": number,
-    "last_updated": timestamp
-  },
-  "episodeId": {
-    "quality": "good" | "bad" | "unrated",
-    "notes": string,
-    "timestamp": number,
-    "metadata": {
-      "frame_count": number,
-      "duration": number,
-      "error_count": number,
-      "success_rate": number
-    }
-  }
-}
-```
-
-### Filtering Episodes
-
-You can filter episodes by quality:
-- Use the URL parameter `?quality=good` to view only good episodes
-- Use `?quality=bad` to view only bad episodes
-- Use `?quality=unrated` to view unrated episodes
+### Backend
+- API endpoints for quality management
+- Dataset handling
+- Export functionality
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js 18.x or later
+- Node.js (v14 or higher)
 - npm or yarn
+- Modern web browser with AV1 codec support
 
 ### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/dataset-editor-sv.git
-cd dataset-editor-sv
-```
+# Clone the repository
+git clone [repository-url]
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-# or
-yarn install
-```
 
-3. Run the development server:
-```bash
+# Run the development server
 npm run dev
-# or
-yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Data Sources
+The project is designed to work with LeRobot datasets, which can be accessed through the Hugging Face platform. The data structure follows the LeRobot dataset format, which includes:
 
-## Usage
+- Video recordings
+- Episode metadata
+- Quality assessments
+- User annotations
 
-1. Enter a dataset ID in the search bar (e.g., `lerobot/aloha_static_cups_open`)
-2. Explore the dataset through the interactive interface
-3. Navigate between episodes and analyze robot behavior
-4. Use the visualization tools to understand training data
+## Credits
+This project is based on the template from [LeRobot's Dataset Visualizer](https://huggingface.co/spaces/lerobot/visualize_dataset) and was developed as part of the Challenge 5: Datasets Tools Improvement track.
 
-### Example Datasets
-
-- `lerobot/aloha_static_cups_open`
-- `lerobot/columbia_cairlab_pusht_real`
-- `lerobot/taco_play`
-
-## Tech Stack
-
-- **Framework**: Next.js 15.3.1
-- **Language**: TypeScript
-- **UI Library**: React 19.0.0
-- **Styling**: TailwindCSS
-- **Data Visualization**: Recharts
-- **Data Processing**: Hyparquet
-- **Icons**: React Icons
-
-## Development
-
-### Available Scripts
-
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-
-### Project Structure
-
-```
-src/
-├── app/              # Next.js app directory
-├── components/       # React components
-├── context/         # React context providers
-└── utils/           # Utility functions
-```
+## Challenge Context
+This project addresses the "Datasets Tools Improvement" challenge, focusing on:
+- Making data collection more efficient and user-friendly
+- Simplifying dataset modification and enhancement
+- Supporting diverse data modalities
+- Improving the overall dataset management experience
 
 ## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+[Add appropriate license information]
 
 ## Acknowledgments
-
-- [LeRobot](https://x.com/RemiCadene/status/1825455895561859185) for the original concept
-- Hugging Face for dataset hosting
-- The open-source community for the amazing tools and libraries
-
-## Contact
-
-For questions and support, please open an issue in the GitHub repository.
+- LeRobot team for the original template
+- Hugging Face for hosting the original space
+- The open-source community for various tools and libraries used in this project
