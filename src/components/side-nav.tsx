@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EpisodeQuality } from "@/utils/episodeQuality";
+import { FaDownload } from "react-icons/fa";
 
 interface SidebarProps {
   datasetInfo: {
@@ -33,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [currentQuality, setCurrentQuality] = useState<EpisodeQuality | null>(null);
   const [showQualityModal, setShowQualityModal] = useState(false);
   const [qualityNote, setQualityNote] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
   const router = useRouter();
   const [sidebarVisible, setSidebarVisible] = React.useState(true);
   const toggleSidebar = () => setSidebarVisible((prev) => !prev);
@@ -82,6 +84,41 @@ const Sidebar: React.FC<SidebarProps> = ({
       }
     } catch (error) {
       console.error('Error saving episode quality:', error);
+    }
+  };
+
+  const handleExportGoodEpisodes = async () => {
+    try {
+      setIsExporting(true);
+      const response = await fetch(`/api/quality/${org}/${dataset}/export`);
+      if (!response.ok) {
+        throw new Error('Failed to export episodes');
+      }
+      
+      // Obtener el nombre del archivo del header Content-Disposition
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const fileName = contentDisposition
+        ? contentDisposition.split('filename="')[1].split('"')[0]
+        : `${datasetInfo.repoId}_good_episodes.json`;
+      
+      // Obtener el contenido JSON
+      const data = await response.json();
+      
+      // Crear y descargar el archivo
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting episodes:', error);
+      alert('Failed to export episodes. Please try again.');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -154,12 +191,22 @@ const Sidebar: React.FC<SidebarProps> = ({
               Bad
             </button>
           </div>
-          <button
-            onClick={() => setShowQualityModal(true)}
-            className="w-full px-4 py-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
-          >
-            Add Notes
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowQualityModal(true)}
+              className="flex-1 px-4 py-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
+            >
+              Add Notes
+            </button>
+            <button
+              onClick={handleExportGoodEpisodes}
+              disabled={isExporting}
+              className="flex-1 px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <FaDownload />
+              {isExporting ? 'Exporting...' : 'Export Good'}
+            </button>
+          </div>
         </div>
 
         {/* Episodes Section */}

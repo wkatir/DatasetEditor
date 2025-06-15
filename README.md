@@ -11,6 +11,77 @@ A modern web application for visualizing and exploring robotics datasets. This t
 - 🚀 Fast performance with Next.js and Turbopack
 - 🎯 TypeScript for type safety
 - 🎨 Beautiful UI with TailwindCSS
+- 🏷️ Dataset Quality Classification System
+
+## Dataset Quality Classification
+
+The application includes a robust system for classifying and managing dataset quality:
+
+### Classification Features
+
+- **Quality Rating**: Mark episodes as "Good" or "Bad"
+- **Notes**: Add detailed notes to each classification
+- **Metadata Tracking**: Automatically tracks:
+  - Frame count
+  - Duration
+  - Error count
+  - Success rate
+
+### How to Use Classification
+
+1. **View an Episode**:
+   - Navigate to any episode in the dataset
+   - Use the sidebar controls to play and analyze the episode
+
+2. **Classify the Episode**:
+   - Click "Good" or "Bad" to classify the episode
+   - Add notes using the "Add Notes" button
+   - Notes can include observations, issues, or any relevant information
+
+3. **Export Good Episodes**:
+   - Click "Export Good" to download a JSON file containing:
+     - List of all good episodes
+     - Episode metadata
+     - Quality information
+     - Success rates and error counts
+
+### Data Storage
+
+Classifications are stored in JSON format at:
+```
+data/qualities/${organization}_${dataset}.json
+```
+
+The JSON structure includes:
+```json
+{
+  "metadata": {
+    "total_episodes": number,
+    "good_episodes": number,
+    "bad_episodes": number,
+    "unrated_episodes": number,
+    "last_updated": timestamp
+  },
+  "episodeId": {
+    "quality": "good" | "bad" | "unrated",
+    "notes": string,
+    "timestamp": number,
+    "metadata": {
+      "frame_count": number,
+      "duration": number,
+      "error_count": number,
+      "success_rate": number
+    }
+  }
+}
+```
+
+### Filtering Episodes
+
+You can filter episodes by quality:
+- Use the URL parameter `?quality=good` to view only good episodes
+- Use `?quality=bad` to view only bad episodes
+- Use `?quality=unrated` to view unrated episodes
 
 ## Getting Started
 

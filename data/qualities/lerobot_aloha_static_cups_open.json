@@ -10,20 +10,35 @@
     "timestamp": 1750014396612
   },
   "2": {
-    "quality": "bad",
+    "quality": "good",
     "notes": "",
-    "timestamp": 1750014897856
+    "timestamp": 1750015354620
   },
   "3": {
     "quality": "bad",
     "notes": "",
     "timestamp": 1750014908068
   },
+  "11": {
+    "quality": "good",
+    "notes": "",
+    "timestamp": 1750015192646
+  },
+  "35": {
+    "quality": "good",
+    "notes": "",
+    "timestamp": 1750015422921
+  },
+  "49": {
+    "quality": "good",
+    "notes": "",
+    "timestamp": 1750015409512
+  },
   "metadata": {
-    "total_episodes": 4,
-    "good_episodes": 1,
-    "bad_episodes": 3,
+    "total_episodes": 7,
+    "good_episodes": 5,
+    "bad_episodes": 2,
     "unrated_episodes": 0,
-    "last_updated": 1750014908068
+    "last_updated": 1750015422921
   }
 }

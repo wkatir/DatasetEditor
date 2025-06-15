@@ -1,0 +1,14 @@
+{
+  "language": "en",
+  "license": "mit",
+  "task_categories": [
+    "reinforcement-learning"
+  ],
+  "size_categories": "n<1K",
+  "source_datasets": [
+    {
+      "name": "taco_play",
+      "type": "original"
+    }
+  ]
+}
