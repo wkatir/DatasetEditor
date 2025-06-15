@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTime } from "../context/time-context";
-import { FaExpand, FaCompress, FaTimes, FaEye } from "react-icons/fa";
+import { FaExpand, FaCompress, FaTimes, FaEye, FaPlay } from "react-icons/fa";
 
 type VideoInfo = {
   filename: string;
@@ -38,6 +38,8 @@ export const VideosPlayer = ({
   const hiddenMenuRef = useRef<HTMLDivElement | null>(null);
   const showHiddenBtnRef = useRef<HTMLButtonElement | null>(null);
   const [videoCodecError, setVideoCodecError] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [videosLoaded, setVideosLoaded] = useState(false);
 
   // Initialize video refs
   useEffect(() => {
@@ -80,18 +82,55 @@ export const VideosPlayer = ({
     checkCodecSupport();
   }, []);
 
+  // Handle video ready
+  useEffect(() => {
+    let videosReadyCount = 0;
+    const onCanPlayThrough = () => {
+      videosReadyCount += 1;
+      if (videosReadyCount === videosInfo.length) {
+        setVideosLoaded(true);
+        if (typeof onVideosReady === "function") {
+          onVideosReady();
+        }
+      }
+    };
+
+    videoRefs.current.forEach((video) => {
+      if (video) {
+        if (video.readyState >= 4) {
+          onCanPlayThrough();
+        } else {
+          video.addEventListener("canplaythrough", onCanPlayThrough);
+        }
+      }
+    });
+
+    return () => {
+      videoRefs.current.forEach((video) => {
+        if (video) {
+          video.removeEventListener("canplaythrough", onCanPlayThrough);
+        }
+      });
+    };
+  }, [videosInfo, onVideosReady]);
+
   // Handle play/pause
   useEffect(() => {
+    if (!hasUserInteracted) return;
+    
     videoRefs.current.forEach((video) => {
       if (video) {
         if (isPlaying) {
-          video.play().catch((e) => console.error("Error playing video:", e));
+          video.play().catch((e) => {
+            console.error("Error playing video:", e);
+            setIsPlaying(false);
+          });
         } else {
           video.pause();
         }
       }
     });
-  }, [isPlaying]);
+  }, [isPlaying, hasUserInteracted]);
 
   // Minimize enlarged video on Escape key
   useEffect(() => {
@@ -159,39 +198,6 @@ export const VideosPlayer = ({
     }
   };
 
-  // Handle video ready
-  useEffect(() => {
-    let videosReadyCount = 0;
-    const onCanPlayThrough = () => {
-      videosReadyCount += 1;
-      if (videosReadyCount === videosInfo.length) {
-        if (typeof onVideosReady === "function") {
-          onVideosReady();
-          setIsPlaying(true);
-        }
-      }
-    };
-
-    videoRefs.current.forEach((video) => {
-      if (video) {
-        // If already ready, call the handler immediately
-        if (video.readyState >= 4) {
-          onCanPlayThrough();
-        } else {
-          video.addEventListener("canplaythrough", onCanPlayThrough);
-        }
-      }
-    });
-
-    return () => {
-      videoRefs.current.forEach((video) => {
-        if (video) {
-          video.removeEventListener("canplaythrough", onCanPlayThrough);
-        }
-      });
-    };
-  }, []);
-
   return (
     <>
       {/* Error message */}
@@ -248,8 +254,91 @@ export const VideosPlayer = ({
         </div>
       )}
 
+      {/* Loading state */}
+      {!videosLoaded && (
+        <div className="flex justify-center items-center p-8">
+          <div className="text-slate-400">Loading videos...</div>
+        </div>
+      )}
+
+      {/* Initial Play Button */}
+      {videosLoaded && !hasUserInteracted && (
+        <div className="flex justify-center items-center p-8">
+          <button
+            onClick={() => {
+              setHasUserInteracted(true);
+              setIsPlaying(true);
+            }}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-white font-medium transition-colors"
+          >
+            <FaPlay /> Start Playback
+          </button>
+        </div>
+      )}
+
+      {/* Video Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {videosInfo.map((video, idx) => {
+          if (hiddenVideos.includes(video.filename)) return null;
+          const isEnlarged = enlargedVideo === video.filename;
+          return (
+            <div
+              key={video.filename}
+              ref={(el) => {
+                if (el) videoContainerRefs.current[video.filename] = el;
+              }}
+              className={`relative rounded-lg overflow-hidden border border-slate-700/30 transition-all duration-300 ${
+                isEnlarged
+                  ? "md:col-span-2 lg:col-span-3"
+                  : "hover:border-sky-500/30"
+              }`}
+            >
+              <video
+                ref={(el) => {
+                  if (el) videoRefs.current[idx] = el;
+                }}
+                src={video.url}
+                onTimeUpdate={handleTimeUpdate}
+                className="w-full h-full object-contain bg-black"
+                playsInline
+                preload="metadata"
+              />
+              {hasUserInteracted && (
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <button
+                    onClick={() => {
+                      if (isEnlarged) {
+                        setEnlargedVideo(null);
+                      } else {
+                        setEnlargedVideo(video.filename);
+                      }
+                    }}
+                    className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
+                  >
+                    {isEnlarged ? <FaCompress /> : <FaExpand />}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setHiddenVideos((prev) => [...prev, video.filename]);
+                    }}
+                    className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+              )}
+              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                <div className="text-sm text-white font-mono truncate">
+                  {video.filename}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
       {/* Show Hidden Videos Button */}
-      {hiddenVideos.length > 0 && (
+      {hasUserInteracted && hiddenVideos.length > 0 && (
         <div className="relative">
           <button
             ref={showHiddenBtnRef}
@@ -259,7 +348,6 @@ export const VideosPlayer = ({
             <FaEye className="text-sky-400" /> Show Hidden Videos ({hiddenVideos.length})
           </button>
 
-          {/* Hidden Videos Menu */}
           {showHiddenMenu && (
             <div
               ref={hiddenMenuRef}
@@ -288,64 +376,6 @@ export const VideosPlayer = ({
           )}
         </div>
       )}
-
-      {/* Video Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-        {videosInfo.map((video, idx) => {
-          if (hiddenVideos.includes(video.filename)) return null;
-          const isEnlarged = enlargedVideo === video.filename;
-          return (
-            <div
-              key={video.filename}
-              ref={(el) => {
-                if (el) videoContainerRefs.current[video.filename] = el;
-              }}
-              className={`relative rounded-lg overflow-hidden border border-slate-700/30 transition-all duration-300 ${
-                isEnlarged
-                  ? "md:col-span-2 lg:col-span-3"
-                  : "hover:border-sky-500/30"
-              }`}
-            >
-              <video
-                ref={(el) => {
-                  if (el) videoRefs.current[idx] = el;
-                }}
-                src={video.url}
-                onTimeUpdate={handleTimeUpdate}
-                className="w-full h-full object-contain bg-black"
-                playsInline
-              />
-              <div className="absolute top-2 right-2 flex gap-2">
-                <button
-                  onClick={() => {
-                    if (isEnlarged) {
-                      setEnlargedVideo(null);
-                    } else {
-                      setEnlargedVideo(video.filename);
-                    }
-                  }}
-                  className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
-                >
-                  {isEnlarged ? <FaCompress /> : <FaExpand />}
-                </button>
-                <button
-                  onClick={() => {
-                    setHiddenVideos((prev) => [...prev, video.filename]);
-                  }}
-                  className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                <div className="text-sm text-white font-mono truncate">
-                  {video.filename}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </>
   );
 };

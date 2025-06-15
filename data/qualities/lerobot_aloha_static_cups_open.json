@@ -1,0 +1,29 @@
+{
+  "0": {
+    "quality": "good",
+    "notes": "Hola",
+    "timestamp": 1750014417901
+  },
+  "1": {
+    "quality": "bad",
+    "notes": "",
+    "timestamp": 1750014396612
+  },
+  "2": {
+    "quality": "bad",
+    "notes": "",
+    "timestamp": 1750014897856
+  },
+  "3": {
+    "quality": "bad",
+    "notes": "",
+    "timestamp": 1750014908068
+  },
+  "metadata": {
+    "total_episodes": 4,
+    "good_episodes": 1,
+    "bad_episodes": 3,
+    "unrated_episodes": 0,
+    "last_updated": 1750014908068
+  }
+}

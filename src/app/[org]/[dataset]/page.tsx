@@ -1,25 +1,30 @@
 import { redirect } from "next/navigation";
-
-type PageParams = {
-  org: string;
-  dataset: string;
-}
-
-type SearchParams = { [key: string]: string | string[] | undefined };
+import { getAllEpisodeQualities, filterEpisodesByQuality } from "@/utils/episodeQuality";
 
 type Props = {
-  params: Promise<PageParams>;
-  searchParams: Promise<SearchParams>;
-}
+  params: Promise<{ org: string; dataset: string }>;
+  searchParams: Promise<{ quality?: string }>;
+};
 
 export default async function DatasetRootPage({ params, searchParams }: Props) {
   const { org, dataset } = await params;
-  await searchParams; // We need to await this even if we don't use it
+  const { quality } = await searchParams;
   
-  const episodeN = process.env.EPISODES
+  // Obtener todas las calificaciones del dataset
+  const qualities = getAllEpisodeQualities(org, dataset);
+  
+  // Obtener todos los episodios disponibles
+  const allEpisodes = process.env.EPISODES
     ?.split(/\s+/)
     .map((x) => parseInt(x.trim(), 10))
-    .filter((x) => !isNaN(x))[0] ?? 0;
-
-  redirect(`/${org}/${dataset}/episode_${episodeN}`);
+    .filter((x) => !isNaN(x)) || [];
+  
+  // Filtrar episodios por calidad si se especifica
+  const filteredEpisodes = quality
+    ? filterEpisodesByQuality(allEpisodes, qualities, quality as 'good' | 'bad' | 'unrated')
+    : allEpisodes;
+  
+  // Redirigir al primer episodio disponible
+  const firstEpisode = filteredEpisodes[0] ?? 0;
+  redirect(`/${org}/${dataset}/episode_${firstEpisode}${quality ? `?quality=${quality}` : ''}`);
 }
