@@ -196,44 +196,53 @@ export const VideosPlayer = ({
     <>
       {/* Error message */}
       {videoCodecError && (
-        <div className="font-medium text-orange-700">
-          <p>
+        <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-200 space-y-3">
+          <p className="font-medium">
             Videos could NOT play because{" "}
             <a
               href="https://en.wikipedia.org/wiki/AV1"
               target="_blank"
-              className="underline"
+              className="text-orange-300 hover:text-orange-200 underline transition-colors"
             >
               AV1
             </a>{" "}
             decoding is not available on your browser.
           </p>
-          <ul className="list-inside list-decimal">
-            <li>
-              If iPhone:{" "}
-              <span className="italic">
-                It is supported with A17 chip or higher.
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-start gap-2">
+              <span className="text-orange-400">•</span>
+              <span>
+                If iPhone:{" "}
+                <span className="italic text-orange-300">
+                  It is supported with A17 chip or higher.
+                </span>
               </span>
             </li>
-            <li>
-              If Mac with Safari:{" "}
-              <span className="italic">
-                It is supported on most browsers except Safari with M1 chip or
-                higher and on Safari with M3 chip or higher.
+            <li className="flex items-start gap-2">
+              <span className="text-orange-400">•</span>
+              <span>
+                If Mac with Safari:{" "}
+                <span className="italic text-orange-300">
+                  It is supported on most browsers except Safari with M1 chip or
+                  higher and on Safari with M3 chip or higher.
+                </span>
               </span>
             </li>
-            <li>
-              Other:{" "}
-              <span className="italic">
-                Contact the maintainers on LeRobot discord channel:
+            <li className="flex items-start gap-2">
+              <span className="text-orange-400">•</span>
+              <span>
+                Other:{" "}
+                <span className="italic text-orange-300">
+                  Contact the maintainers on LeRobot discord channel:
+                </span>
+                <a
+                  href="https://discord.com/invite/s3KuuzsPFb"
+                  target="_blank"
+                  className="text-orange-300 hover:text-orange-200 underline transition-colors ml-1"
+                >
+                  https://discord.com/invite/s3KuuzsPFb
+                </a>
               </span>
-              <a
-                href="https://discord.com/invite/s3KuuzsPFb"
-                target="_blank"
-                className="underline"
-              >
-                https://discord.com/invite/s3KuuzsPFb
-              </a>
             </li>
           </ul>
         </div>
@@ -244,94 +253,95 @@ export const VideosPlayer = ({
         <div className="relative">
           <button
             ref={showHiddenBtnRef}
-            className="flex items-center gap-2 rounded bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700 border border-slate-500"
+            className="flex items-center gap-2 rounded-lg bg-slate-800/50 px-4 py-2 text-sm text-slate-200 hover:bg-slate-700/50 hover:text-white border border-slate-700/30 transition-all duration-300"
             onClick={() => setShowHiddenMenu((prev) => !prev)}
           >
-            <FaEye /> Show Hidden Videos ({hiddenVideos.length})
+            <FaEye className="text-sky-400" /> Show Hidden Videos ({hiddenVideos.length})
           </button>
+
+          {/* Hidden Videos Menu */}
           {showHiddenMenu && (
             <div
               ref={hiddenMenuRef}
-              className="absolute left-0 mt-2 w-max rounded border border-slate-500 bg-slate-900 shadow-lg p-2 z-50"
+              className="absolute top-full left-0 mt-2 w-64 rounded-lg bg-slate-800/95 backdrop-blur-xl border border-slate-700/30 shadow-xl z-50"
             >
-              <div className="mb-2 text-xs text-slate-300">
-                Restore hidden videos:
+              <div className="p-3">
+                <div className="text-sm font-medium text-slate-200 mb-2">Hidden Videos</div>
+                <div className="space-y-1">
+                  {hiddenVideos.map((filename) => (
+                    <button
+                      key={filename}
+                      onClick={() => {
+                        setHiddenVideos((prev) =>
+                          prev.filter((f) => f !== filename),
+                        );
+                        setShowHiddenMenu(false);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-all duration-300"
+                    >
+                      {filename}
+                    </button>
+                  ))}
+                </div>
               </div>
-              {hiddenVideos.map((filename) => (
-                <button
-                  key={filename}
-                  className="block w-full text-left px-2 py-1 rounded hover:bg-slate-700 text-slate-100"
-                  onClick={() =>
-                    setHiddenVideos((prev: string[]) =>
-                      prev.filter((v: string) => v !== filename),
-                    )
-                  }
-                >
-                  {filename}
-                </button>
-              ))}
             </div>
           )}
         </div>
       )}
 
-      {/* Videos */}
-      <div className="flex flex-wrap gap-x-2 gap-y-6">
+      {/* Video Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         {videosInfo.map((video, idx) => {
-          if (hiddenVideos.includes(video.filename) || videoCodecError)
-            return null;
+          if (hiddenVideos.includes(video.filename)) return null;
           const isEnlarged = enlargedVideo === video.filename;
           return (
             <div
               key={video.filename}
               ref={(el) => {
-                videoContainerRefs.current[video.filename] = el;
+                if (el) videoContainerRefs.current[video.filename] = el;
               }}
-              className={`${isEnlarged ? "z-40 fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center" : "max-w-96"}`}
-              style={isEnlarged ? { height: "100vh", width: "100vw" } : {}}
+              className={`relative rounded-lg overflow-hidden border border-slate-700/30 transition-all duration-300 ${
+                isEnlarged
+                  ? "md:col-span-2 lg:col-span-3"
+                  : "hover:border-sky-500/30"
+              }`}
             >
-              <p className="truncate w-full rounded-t-xl bg-gray-800 px-2 text-sm text-gray-300 flex items-center justify-between">
-                <span>{video.filename}</span>
-                <span className="flex gap-1">
-                  <button
-                    title={isEnlarged ? "Minimize" : "Enlarge"}
-                    className="ml-2 p-1 hover:bg-slate-700 rounded focus:outline-none focus:ring-0"
-                    onClick={() =>
-                      setEnlargedVideo(isEnlarged ? null : video.filename)
-                    }
-                  >
-                    {isEnlarged ? <FaCompress /> : <FaExpand />}
-                  </button>
-                  <button
-                    title="Hide Video"
-                    className="ml-1 p-1 hover:bg-slate-700 rounded focus:outline-none focus:ring-0"
-                    onClick={() =>
-                      setHiddenVideos((prev: string[]) => [
-                        ...prev,
-                        video.filename,
-                      ])
-                    }
-                    disabled={visibleCount === 1}
-                  >
-                    <FaTimes />
-                  </button>
-                </span>
-              </p>
               <video
                 ref={(el) => {
                   if (el) videoRefs.current[idx] = el;
                 }}
-                muted
-                loop
-                className={`w-full object-contain ${isEnlarged ? "max-h-[90vh] max-w-[90vw]" : ""}`}
-                onTimeUpdate={
-                  idx === firstVisibleIdx ? handleTimeUpdate : undefined
-                }
-                style={isEnlarged ? { zIndex: 41 } : {}}
-              >
-                <source src={video.url} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+                src={video.url}
+                onTimeUpdate={handleTimeUpdate}
+                className="w-full h-full object-contain bg-black"
+                playsInline
+              />
+              <div className="absolute top-2 right-2 flex gap-2">
+                <button
+                  onClick={() => {
+                    if (isEnlarged) {
+                      setEnlargedVideo(null);
+                    } else {
+                      setEnlargedVideo(video.filename);
+                    }
+                  }}
+                  className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
+                >
+                  {isEnlarged ? <FaCompress /> : <FaExpand />}
+                </button>
+                <button
+                  onClick={() => {
+                    setHiddenVideos((prev) => [...prev, video.filename]);
+                  }}
+                  className="p-2 rounded-lg bg-slate-800/80 text-slate-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                <div className="text-sm text-white font-mono truncate">
+                  {video.filename}
+                </div>
+              </div>
             </div>
           );
         })}

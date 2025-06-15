@@ -47,54 +47,71 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="flex z-10 min-h-screen absolute md:static" ref={sidebarRef}>
       <nav
-        className={`shrink-0 overflow-y-auto bg-slate-900 p-5 break-words md:max-h-screen w-60 md:shrink ${
+        className={`shrink-0 overflow-y-auto bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl p-6 break-words md:max-h-screen w-72 md:shrink border-r border-slate-700/30 transition-all duration-300 ${
           !sidebarVisible ? "hidden" : ""
         }`}
         aria-label="Sidebar navigation"
       >
-        <ul>
-          <li>Number of samples/frames: {datasetInfo.total_frames}</li>
-          <li>Number of episodes: {datasetInfo.total_episodes}</li>
-          <li>Frames per second: {datasetInfo.fps}</li>
-        </ul>
-
-        <p>Episodes:</p>
-
-        {/* episodes menu for medium & large screens */}
-        <div className="ml-2 block">
-          <ul>
-            {paginatedEpisodes.map((episode) => (
-              <li key={episode} className="mt-0.5 font-mono text-sm">
-                <Link
-                  href={`./episode_${episode}`}
-                  className={`underline ${episode === episodeId ? "-ml-1 font-bold" : ""}`}
-                >
-                  Episode {episode}
-                </Link>
-              </li>
-            ))}
+        {/* Dataset Info Section */}
+        <div className="space-y-4 mb-8">
+          <h2 className="text-lg font-semibold text-slate-200 mb-4">Dataset Information</h2>
+          <ul className="space-y-3">
+            <li className="flex items-center gap-2 text-slate-300">
+              <span className="text-sky-400">Samples/Frames:</span>
+              <span className="font-mono">{datasetInfo.total_frames}</span>
+            </li>
+            <li className="flex items-center gap-2 text-slate-300">
+              <span className="text-sky-400">Episodes:</span>
+              <span className="font-mono">{datasetInfo.total_episodes}</span>
+            </li>
+            <li className="flex items-center gap-2 text-slate-300">
+              <span className="text-sky-400">FPS:</span>
+              <span className="font-mono">{datasetInfo.fps}</span>
+            </li>
           </ul>
+        </div>
+
+        {/* Episodes Section */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-slate-200">Episodes</h2>
+          <div className="space-y-1">
+            {paginatedEpisodes.map((episode) => (
+              <Link
+                key={episode}
+                href={`./episode_${episode}`}
+                className={`block px-3 py-2 rounded-lg font-mono text-sm transition-all duration-300 ${
+                  episode === episodeId
+                    ? "bg-sky-500/20 text-sky-400 border border-sky-500/30"
+                    : "text-slate-300 hover:bg-slate-800/50 hover:text-white border border-transparent"
+                }`}
+              >
+                Episode {episode}
+              </Link>
+            ))}
+          </div>
 
           {totalPages > 1 && (
-            <div className="mt-3 flex items-center text-xs">
+            <div className="mt-6 flex items-center justify-between">
               <button
                 onClick={prevPage}
-                className={`mr-2 rounded bg-slate-800 px-2 py-1 ${
-                  currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  currentPage === 1
+                    ? "bg-slate-800/50 text-slate-500 cursor-not-allowed"
+                    : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
                 }`}
                 disabled={currentPage === 1}
               >
-                « Prev
+                « Previous
               </button>
-              <span className="mr-2 font-mono">
+              <span className="font-mono text-sm text-slate-300">
                 {currentPage} / {totalPages}
               </span>
               <button
                 onClick={nextPage}
-                className={`rounded bg-slate-800 px-2 py-1 ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   currentPage === totalPages
-                    ? "cursor-not-allowed opacity-50"
-                    : ""
+                    ? "bg-slate-800/50 text-slate-500 cursor-not-allowed"
+                    : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
                 }`}
                 disabled={currentPage === totalPages}
               >
@@ -104,13 +121,14 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
       </nav>
-      {/* Toggle sidebar button */}
+
+      {/* Toggle Sidebar Button */}
       <button
-        className="mx-1 flex items-center opacity-50 hover:opacity-100 focus:outline-none focus:ring-0"
+        className="mx-1 flex items-center opacity-50 hover:opacity-100 focus:outline-none focus:ring-0 transition-opacity duration-300"
         onClick={toggleSidebar}
         title="Toggle sidebar"
       >
-        <div className="h-10 w-2 rounded-full bg-slate-500"></div>
+        <div className="h-10 w-2 rounded-full bg-gradient-to-b from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 transition-all duration-300"></div>
       </button>
     </div>
   );

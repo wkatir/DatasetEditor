@@ -63,47 +63,55 @@ export default function HomeClient() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-900 to-black">
       {/* Main Content Container */}
       <div className="relative z-10 min-h-screen w-full flex flex-col lg:flex-row">
         {/* Left Side - Text Content */}
-        <div className="w-full lg:w-1/2 min-h-[50vh] lg:h-screen flex flex-col items-center justify-center px-4 sm:px-8 bg-gradient-to-br from-slate-900/90 to-slate-800/90 backdrop-blur-md">
-          <div className="w-full max-w-xl py-8 lg:py-0">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 drop-shadow-lg text-center">
-              LeRobot Dataset Visualizer
-            </h1>
-            <a
-              href="https://x.com/RemiCadene/status/1825455895561859185"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sky-400 font-medium text-sm sm:text-base lg:text-lg underline mb-4 sm:mb-6 lg:mb-8 inline-block hover:text-sky-300 transition-colors"
-            >
-              create & train your own robots
-            </a>
-            <form onSubmit={handleGo} className="flex flex-col sm:flex-row gap-2 justify-center mt-4 sm:mt-6 w-full">
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Enter dataset id"
-                className="px-4 py-2 rounded-md text-sm sm:text-base text-white border-white border-1 focus:outline-none w-full shadow-md bg-black/30 backdrop-blur-sm"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleGo(e as any);
-                  }
-                }}
-              />
+        <div className="w-full lg:w-1/2 min-h-[50vh] lg:h-screen flex flex-col items-center justify-center px-4 sm:px-8 bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-r border-slate-700/30">
+          <div className="w-full max-w-xl py-8 lg:py-0 space-y-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                LeRobot Dataset Visualizer
+              </h1>
+              <a
+                href="https://x.com/RemiCadene/status/1825455895561859185"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sky-400 font-medium text-sm sm:text-base lg:text-lg hover:text-sky-300 transition-colors inline-flex items-center gap-2 group"
+              >
+                <span className="relative">
+                  create & train your own robots
+                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-sky-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                </span>
+              </a>
+            </div>
+
+            <form onSubmit={handleGo} className="flex flex-col sm:flex-row gap-2 justify-center w-full">
+              <div className="relative flex-grow">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Enter dataset id"
+                  className="w-full px-4 py-3 rounded-lg text-sm sm:text-base text-white border border-slate-600/50 focus:border-sky-400 focus:outline-none shadow-lg bg-slate-800/50 backdrop-blur-sm transition-all duration-300"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleGo(e as any);
+                    }
+                  }}
+                />
+              </div>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-md bg-sky-400 text-black font-semibold text-sm sm:text-base hover:bg-sky-300 transition-colors shadow-md whitespace-nowrap"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 text-white font-semibold text-sm sm:text-base hover:from-sky-400 hover:to-sky-500 transition-all duration-300 shadow-lg hover:shadow-sky-500/20 whitespace-nowrap"
               >
                 Go
               </button>
             </form>
 
             {/* Example Datasets */}
-            <div className="mt-4 sm:mt-6 lg:mt-8 w-full">
-              <div className="font-semibold mb-2 text-sm sm:text-base lg:text-lg">Example Datasets:</div>
+            <div className="space-y-3">
+              <div className="font-semibold text-sm sm:text-base lg:text-lg text-slate-300">Example Datasets:</div>
               <div className="flex flex-col gap-2">
                 {[
                   "lerobot/aloha_static_cups_open",
@@ -113,7 +121,7 @@ export default function HomeClient() {
                   <button
                     key={ds}
                     type="button"
-                    className="w-full px-3 sm:px-4 py-2 rounded bg-slate-700/80 text-sky-200 hover:bg-sky-700 hover:text-white transition-colors shadow backdrop-blur-sm text-xs sm:text-sm lg:text-base truncate"
+                    className="w-full px-4 py-3 rounded-lg bg-slate-800/50 text-sky-200 hover:bg-slate-700/80 hover:text-white transition-all duration-300 shadow-md hover:shadow-sky-500/10 backdrop-blur-sm text-xs sm:text-sm lg:text-base truncate border border-slate-700/30 hover:border-sky-500/30"
                     onClick={() => {
                       if (inputRef.current) {
                         inputRef.current.value = ds;
@@ -130,7 +138,7 @@ export default function HomeClient() {
 
             <Link
               href="/explore"
-              className="inline-block px-4 sm:px-6 py-2 sm:py-3 mt-4 sm:mt-6 lg:mt-8 rounded-md bg-sky-500 text-white font-semibold text-sm sm:text-base lg:text-lg shadow-lg hover:bg-sky-400 transition-colors w-full text-center"
+              className="inline-block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 text-white font-semibold text-sm sm:text-base lg:text-lg shadow-lg hover:from-sky-400 hover:to-sky-500 transition-all duration-300 text-center hover:shadow-sky-500/20"
             >
               Explore Open Datasets
             </Link>
@@ -142,7 +150,8 @@ export default function HomeClient() {
           <div className="video-background">
             <div id="yt-bg-player" className="w-full h-full" />
           </div>
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/30 to-transparent lg:hidden" />
         </div>
       </div>
     </div>
