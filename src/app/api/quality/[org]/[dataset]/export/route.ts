@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
@@ -7,12 +7,19 @@ import { getAllEpisodeQualities } from "@/utils/episodeQuality";
 
 const DATASET_URL = process.env.DATASET_URL || "https://huggingface.co/datasets";
 
+type RouteContext = {
+  params: Promise<{
+    org: string;
+    dataset: string;
+  }>;
+};
+
 export async function GET(
-  request: Request,
-  { params }: { params: { org: string; dataset: string } }
+  request: NextRequest,
+  context: RouteContext
 ) {
   try {
-    const { org, dataset } = params;
+    const { org, dataset } = await context.params;
     const repoId = `${org}/${dataset}`;
 
     // Obtener la información del dataset
